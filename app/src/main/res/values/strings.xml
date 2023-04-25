@@ -7,4 +7,9 @@
     <string name="text_create_account">Don\'t have an account? Register here</string>
     <string name="string_text_go_login">If you have an account, Login here</string>
     <string name="btn_signup">Sign up</string>
+
+    <!--MainActivity-->
+    <string name="editText_username_error_message">Username field is required</string>
+    <string name="editText_email_error_message">Email field is required</string>
+    <string name="editText_password_error_message">Password field is required</string>
 </resources>
