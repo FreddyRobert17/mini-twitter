@@ -11,8 +11,8 @@ import retrofit2.Retrofit;
 public class TwitterService {
     private Retrofit retrofit = RetrofitHelper.getInstance();
 
-    public Call<ResponseAuth> doLogin(RequestLogin requestLogin){
-        return retrofit.create(TwitterApiClient.class).doLogin(requestLogin);
+    public Call<ResponseAuth> doLogin(RequestLogin requestLogin, String token){
+        return retrofit.create(TwitterApiClient.class).doLogin(requestLogin, token);
     }
 
     public Call<ResponseAuth> doSignUp(RequestSignUp requestSignUp) {

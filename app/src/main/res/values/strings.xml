@@ -12,4 +12,13 @@
     <string name="editText_username_error_message">Username field is required</string>
     <string name="editText_email_error_message">Email field is required</string>
     <string name="editText_password_error_message">Password field is required</string>
+    <string name="title_activity_test">testActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

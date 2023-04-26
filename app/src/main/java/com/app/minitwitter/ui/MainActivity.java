@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.minitwitter.R;
+import com.app.minitwitter.common.Constants;
+import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkLoggedUser();
+
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
@@ -36,6 +40,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
 
         addEvents();
+    }
+
+    private void checkLoggedUser(){
+        String token = SharedPreferencesManager.getStringValue(Constants.PREF_TOKEN);
+
+        if(!token.isEmpty()){
+            Intent intent = new Intent(this, DashboardActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void findViews(){
@@ -76,27 +89,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             RequestLogin requestLogin = new RequestLogin(email, password);
             TwitterService twitterService = new TwitterService();
             TwitterRepository twitterRepository = new TwitterRepository(twitterService);
-            Call<ResponseAuth> call =  twitterRepository.doLogin(requestLogin);
+            String token = SharedPreferencesManager.getStringValue(Constants.PREF_TOKEN);
+
+            Call<ResponseAuth> call =  twitterRepository.doLogin(requestLogin, "Bearer " + token);
 
             call.enqueue(new Callback<ResponseAuth>() {
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
                         Toast.makeText(MainActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
-                        startActivity(intent);
-                        finish();
+                        goToDashboard();
                     } else {
-                        Toast.makeText(MainActivity.this, "fue mal error codigo "  + response.code(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, "not successful response "  + response.code(), Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "algo sale mal mela", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "failure response" + t, Toast.LENGTH_LONG).show();
                 }
             });
         }
+    }
+
+    private void goToDashboard(){
+        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void goToSignUp() {

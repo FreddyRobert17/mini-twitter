@@ -5,13 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.minitwitter.R;
+import com.app.minitwitter.common.Constants;
+import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
@@ -22,9 +28,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnSignUp;
     TextView tvGoLogin;
+
+    ScrollView scrollView;
 
     EditText editTextName, editTextEmail, editTextPassword;
     @Override
@@ -40,6 +48,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews(){
+        scrollView = findViewById(R.id.scroll_view);
         btnSignUp = findViewById(R.id.button_signup);
         tvGoLogin = findViewById(R.id.text_view_go_login);
         editTextName = findViewById(R.id.edit_text_name);
@@ -86,6 +95,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
+                        SharedPreferencesManager.setStringValue(Constants.PREF_TOKEN, response.body().getAccessToken());
                         Toast.makeText(SignUpActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
                         Log.i("TAG", response.body().getAccessToken());

@@ -14,8 +14,8 @@ public class TwitterRepository {
         this.twitterService = twitterService;
     }
 
-    public Call<ResponseAuth> doLogin(RequestLogin requestLogin){
-        return twitterService.doLogin(requestLogin);
+    public Call<ResponseAuth> doLogin(RequestLogin requestLogin, String token){
+        return twitterService.doLogin(requestLogin, token);
     }
 
     public Call<ResponseAuth> doSignUp(RequestSignUp requestSignUp){
