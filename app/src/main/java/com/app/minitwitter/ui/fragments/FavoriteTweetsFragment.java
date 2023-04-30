@@ -1,4 +1,4 @@
-package com.app.minitwitter;
+package com.app.minitwitter.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,21 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.app.minitwitter.databinding.FragmentSecondBinding;
+import com.app.minitwitter.R;
+import com.app.minitwitter.databinding.FragmentFavoriteTweetsBinding;
 
-public class SecondFragment extends Fragment {
+public class FavoriteTweetsFragment extends Fragment {
 
-    private FragmentSecondBinding binding;
+    private FragmentFavoriteTweetsBinding binding;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-
-        binding = FragmentSecondBinding.inflate(inflater, container, false);
+        binding = FragmentFavoriteTweetsBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -32,8 +31,8 @@ public class SecondFragment extends Fragment {
         binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                //NavHostFragment.findNavController(FavoriteTweetsFragment.this)
+                        //.navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
     }
