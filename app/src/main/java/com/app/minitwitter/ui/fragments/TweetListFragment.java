@@ -7,32 +7,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.app.minitwitter.R;
-import com.app.minitwitter.data.TwitterRepository;
-import com.app.minitwitter.data.network.TwitterService;
+import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.retrofit.response.Tweet;
 import com.app.minitwitter.viewmodel.TweetViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class TweetListFragment extends Fragment {
-    private int mColumnCount = 1;
+    private int tweetListType = Constants.TWEET_LIST_ALL;
     RecyclerView recyclerView;
     List<Tweet> tweetList = new ArrayList<>();
     TweetListRecyclerViewAdapter tweetListRecyclerViewAdapter;
@@ -43,6 +35,14 @@ public class TweetListFragment extends Fragment {
     public TweetListFragment() {
     }
 
+    public static TweetListFragment newInstance(int tweetListType){
+        TweetListFragment fragment = new TweetListFragment();
+        Bundle args = new Bundle();
+        args.putInt(Constants.TWEET_LIST_TYPE, tweetListType);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +50,10 @@ public class TweetListFragment extends Fragment {
         tweetViewModel = new ViewModelProvider(getActivity(),
                 ViewModelProvider.Factory.from(TweetViewModel.initializer))
                 .get(TweetViewModel.class);
+
+        if(getArguments() != null){
+            tweetListType = getArguments().getInt(Constants.TWEET_LIST_TYPE);
+        }
     }
 
     @Override
@@ -67,30 +71,44 @@ public class TweetListFragment extends Fragment {
                 @Override
                 public void onRefresh() {
                     swipeRefreshLayout.setRefreshing(true);
-                    refreshData();
+
+                    if(tweetListType == Constants.TWEET_LIST_ALL){
+                        refreshData();
+                    } else if(tweetListType == Constants.TWEET_LIST_FAVS) {
+                        refreshFavData();
+                    }
                 }
             });
 
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             tweetListRecyclerViewAdapter = new TweetListRecyclerViewAdapter(getActivity(), tweetList);
             recyclerView.setAdapter(tweetListRecyclerViewAdapter);
 
-            loadTweetData();
+            if(tweetListType == Constants.TWEET_LIST_ALL){
+                loadAllTweetData();
+            } else if(tweetListType == Constants.TWEET_LIST_FAVS) {
+                loadFavData();
+            }
 
             return view;
     }
 
-    private void loadTweetData(){
+    private void loadAllTweetData(){
         tweetViewModel.getTweets().observe(getActivity(), new Observer<List<Tweet>>() {
             @Override
             public void onChanged(List<Tweet> tweets) {
                 tweetList = tweets;
                 tweetListRecyclerViewAdapter.setData(tweets);
+            }
+        });
+    }
+
+    private void loadFavData() {
+        tweetViewModel.getFavTweets().observe(getActivity(), new Observer<List<Tweet>>() {
+            @Override
+            public void onChanged(List<Tweet> tweets) {
+                tweetList = tweets;
+                tweetListRecyclerViewAdapter.setData(tweetList);
             }
         });
     }
@@ -103,6 +121,18 @@ public class TweetListFragment extends Fragment {
                 tweetList = tweets;
                 tweetListRecyclerViewAdapter.setData(tweetList);
                 tweetViewModel.getNewTweets().removeObserver(this);
+            }
+        });
+    }
+
+    private void refreshFavData() {
+        tweetViewModel.getNewFavTweets().observe(getActivity(), new Observer<List<Tweet>>() {
+            @Override
+            public void onChanged(List<Tweet> tweets) {
+                swipeRefreshLayout.setRefreshing(false);
+                tweetList = tweets;
+                tweetListRecyclerViewAdapter.setData(tweetList);
+                tweetViewModel.getNewFavTweets().removeObserver(this);
             }
         });
     }

@@ -2,18 +2,19 @@ package com.app.minitwitter.data;
 
 import android.util.Log;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.app.minitwitter.common.Constants;
+import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.network.TwitterService;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
-import com.app.minitwitter.ui.fragments.TweetListRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +25,9 @@ import retrofit2.Response;
 public class TwitterRepository {
     TwitterService twitterService;
     MutableLiveData<List<Tweet>> allTweets;
+
+    MutableLiveData<List<Tweet>> favTweets;
+
     public TwitterRepository(){
         twitterService = new TwitterService();
         allTweets = getAllTweets();
@@ -64,6 +68,26 @@ public class TwitterRepository {
             }
         });
         return allTweets;
+    }
+
+    public MutableLiveData<List<Tweet>> getFavTweets(){
+        if(favTweets == null){
+            favTweets = new MutableLiveData<>();
+        }
+
+        List<Tweet> currentList = allTweets.getValue();
+        List<Tweet> favList = new ArrayList<>();
+        String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+
+        for(Tweet tweet: currentList){
+            if(tweet.getLikes().contains(userId)){
+                favList.add(tweet);
+            }
+        }
+
+        favTweets.postValue(favList);
+
+        return favTweets;
     }
 
     public void createTweet(String userId, String message){
@@ -113,6 +137,8 @@ public class TwitterRepository {
                     }
 
                     allTweets.setValue(clonedList);
+
+                    getFavTweets();
                 }
             }
 

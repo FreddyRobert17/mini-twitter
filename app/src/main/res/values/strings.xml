@@ -26,4 +26,10 @@
     <!--Add tweet fragment-->
     <string name="hint_add_tweet_message">What\'s happening?</string>
     <string name="create_tweet_button_text">Send</string>
+
+    <!--Bottom navigation menu titles-->
+    <string name="menu_home_title">Home</string>
+    <string name="menu_favorites_title">Favorites</string>
+    <string name="menu_profile_title">Profile</string>
+
 </resources>
