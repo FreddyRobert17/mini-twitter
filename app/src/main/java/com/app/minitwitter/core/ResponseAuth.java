@@ -9,7 +9,19 @@ public class ResponseAuth {
     @Expose
     private String accessToken;
 
+    @SerializedName("id")
+    @Expose
+    private String id;
+
     public ResponseAuth() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public ResponseAuth(String accessToken) {

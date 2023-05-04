@@ -31,7 +31,6 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     Button btnSignUp;
     TextView tvGoLogin;
-
     ScrollView scrollView;
 
     EditText editTextName, editTextEmail, editTextPassword;
@@ -87,8 +86,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
             RequestSignUp requestSignUp = new RequestSignUp(username, email, password);
-            TwitterService twitterService = new TwitterService();
-            TwitterRepository twitterRepository = new TwitterRepository(twitterService);
+            TwitterRepository twitterRepository = new TwitterRepository();
             Call<ResponseAuth> call =  twitterRepository.doSignUp(requestSignUp);
 
             call.enqueue(new Callback<ResponseAuth>() {
@@ -96,6 +94,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
                         SharedPreferencesManager.setStringValue(Constants.PREF_TOKEN, response.body().getAccessToken());
+                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_ID, response.body().getId());
                         Toast.makeText(SignUpActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
                         Log.i("TAG", response.body().getAccessToken());

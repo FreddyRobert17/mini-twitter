@@ -1,20 +1,24 @@
 
 package com.app.minitwitter.retrofit.response;
 
-import java.util.List;
+import androidx.annotation.Nullable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Tweet {
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private String id;
     @SerializedName("message")
     @Expose
     private String message;
     @SerializedName("likes")
+    @Nullable
     @Expose
-    private List<Like> likes;
+    private List<String> likes;
     @SerializedName("user")
     @Expose
     private User user;
@@ -22,18 +26,25 @@ public class Tweet {
     public Tweet() {
     }
 
-    public Tweet(Integer id, String message, List<Like> likes, User user) {
+    public Tweet(String id, String message, List<String> likes, User user) {
         this.id = id;
         this.message = message;
         this.likes = likes;
         this.user = user;
     }
 
-    public Integer getId() {
+    public Tweet(Tweet tweet) {
+        this.id = tweet.getId();
+        this.message = tweet.getMessage();
+        this.likes = tweet.getLikes();
+        this.user = tweet.getUser();
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -45,11 +56,11 @@ public class Tweet {
         this.message = message;
     }
 
-    public List<Like> getLikes() {
+    public List<String> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<Like> likes) {
+    public void setLikes(List<String> likes) {
         this.likes = likes;
     }
 

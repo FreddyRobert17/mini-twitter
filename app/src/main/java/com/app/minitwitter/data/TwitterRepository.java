@@ -15,6 +15,7 @@ import com.app.minitwitter.ui.fragments.TweetListRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,8 +66,8 @@ public class TwitterRepository {
         return allTweets;
     }
 
-    public void createTweet(String message){
-        RequestCreateTweet requestCreateTweet = new RequestCreateTweet(message);
+    public void createTweet(String userId, String message){
+        RequestCreateTweet requestCreateTweet = new RequestCreateTweet(userId, message);
 
         Call<Tweet> call = twitterService.createTweet(requestCreateTweet);
 
@@ -90,6 +91,34 @@ public class TwitterRepository {
             @Override
             public void onFailure(Call<Tweet> call, Throwable t) {
                 Log.i("TAG", "failure: "  + t);
+            }
+        });
+    }
+
+    public void likeTweet(String userId, String idTweet){
+        Call<Tweet> call = twitterService.likeTweet(userId, idTweet);
+
+        call.enqueue(new Callback<Tweet>() {
+            @Override
+            public void onResponse(Call<Tweet> call, Response<Tweet> response) {
+                if(response.isSuccessful()){
+                    List<Tweet> clonedList = new ArrayList<>();
+
+                    for(int i = 0; i < allTweets.getValue().size(); i++){
+                        if(Objects.equals(allTweets.getValue().get(i).getId(), response.body().getId())){
+                            clonedList.add(response.body());
+                        } else {
+                          clonedList.add(new Tweet(allTweets.getValue().get(i)));
+                        }
+                    }
+
+                    allTweets.setValue(clonedList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Tweet> call, Throwable t) {
+
             }
         });
     }

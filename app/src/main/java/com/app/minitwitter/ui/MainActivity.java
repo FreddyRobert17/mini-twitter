@@ -31,7 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        checkLoggedUser();
+        Intent intent = new Intent(this, DashboardActivity.class);
+        startActivity(intent);
+
+        //checkLoggedUser();
 
         setContentView(R.layout.activity_main);
 
@@ -87,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
             RequestLogin requestLogin = new RequestLogin(email, password);
-            TwitterService twitterService = new TwitterService();
-            TwitterRepository twitterRepository = new TwitterRepository(twitterService);
+            TwitterRepository twitterRepository = new TwitterRepository();
             String token = SharedPreferencesManager.getStringValue(Constants.PREF_TOKEN);
 
             Call<ResponseAuth> call =  twitterRepository.doLogin(requestLogin, "Bearer " + token);

@@ -73,10 +73,12 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
             if(message.isEmpty()){
                 Toast.makeText(getActivity(), "You need to write a tweet", Toast.LENGTH_SHORT).show();
             } else {
+                String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+
                 TweetViewModel tweetViewModel = new ViewModelProvider(getActivity(),
                         ViewModelProvider.Factory.from(TweetViewModel.initializer))
                         .get(TweetViewModel.class);
-                tweetViewModel.createTweet(message);
+                tweetViewModel.createTweet(userId, message);
                getDialog().dismiss();
             }
         } else if (id == R.id.ivClose){

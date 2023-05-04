@@ -14,6 +14,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface TwitterApiClient {
 
@@ -29,4 +30,6 @@ public interface TwitterApiClient {
     @POST("tweets/create")
     Call<Tweet> createTweet(@Body RequestCreateTweet requestCreateTweet);
 
+    @POST("tweets/like/{userId}&{tweetId}")
+    Call<Tweet> likeTweet(@Path("userId") String userId, @Path("tweetId") String idTweet);
 }

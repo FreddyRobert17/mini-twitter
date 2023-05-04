@@ -1,10 +1,13 @@
 package com.app.minitwitter.ui.fragments;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.app.minitwitter.R;
+import com.app.minitwitter.common.Constants;
+import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.databinding.FragmentTweetListBinding;
 import com.app.minitwitter.retrofit.response.Like;
 import com.app.minitwitter.retrofit.response.Tweet;
+import com.app.minitwitter.viewmodel.TweetViewModel;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -24,9 +30,14 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
     private List<Tweet> tweetList;
     private Context context;
 
+    private TweetViewModel tweetViewModel;
+
     public TweetListRecyclerViewAdapter(Context context, List<Tweet> tweetList) {
         this.context = context;
         this.tweetList = tweetList;
+        tweetViewModel = new ViewModelProvider((FragmentActivity)context,
+                ViewModelProvider.Factory.from(TweetViewModel.initializer))
+                .get(TweetViewModel.class);
     }
 
     @Override
@@ -36,25 +47,45 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int currentPos) {
+        int position = holder.getBindingAdapterPosition();
+
         if(tweetList != null){
-            holder.tvAuthorName.setText(String.valueOf(tweetList.get(position).getId()));
+            holder.tvAuthorName.setText(String.valueOf(tweetList.get(position).getUser().getUsername()));
             holder.tvMessage.setText(tweetList.get(position).getMessage());
             holder.tvLikeCount.setText(String.valueOf(tweetList.get(position).getLikes().size()));
 
             Glide.with(context)
                     .load(tweetList.get(position).getUser().getPhotoUrl())
+                    .placeholder(R.drawable.unknown_person)
                     .into(holder.ivAvatar);
 
-            List<Like> likes =  tweetList.get(position).getLikes();
-
-            for(Like like : likes){
-                if(like.getUsername().equalsIgnoreCase("iam")){
-                    holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_filled_heart));
-                    holder.tvLikeCount.setTextColor(Color.RED);
-                    holder.tvLikeCount.setTypeface(null, Typeface.BOLD);
+            holder.ivLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+                    String tweetId = tweetList.get(position).getId();
+                    tweetViewModel.likeTweet(userId, tweetId);
                 }
+            });
+
+            List<String> likes =  tweetList.get(position).getLikes();
+
+            if(!likes.isEmpty()){
+                for(String likeId : likes){
+                    String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+                    if(likeId.equalsIgnoreCase(userId)){
+                        holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_filled_heart));
+                        holder.tvLikeCount.setTextColor(Color.RED);
+                        holder.tvLikeCount.setTypeface(null, Typeface.BOLD);
+                    }
+                }
+            } else{
+                holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_empty_heart));
+                holder.tvLikeCount.setTypeface(null, Typeface.NORMAL);
+                holder.tvLikeCount.setTextColor(Color.GRAY);
             }
+
         }
     }
 

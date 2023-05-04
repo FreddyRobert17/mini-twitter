@@ -29,8 +29,17 @@ public class TweetViewModel extends AndroidViewModel {
         return tweets;
     }
 
-    public void createTweet(String message){
-        twitterRepository.createTweet(message);
+    public void createTweet(String userId, String message){
+        twitterRepository.createTweet(userId, message);
+    }
+
+    public LiveData<List<Tweet>> getNewTweets(){
+        tweets = twitterRepository.getAllTweets();
+        return tweets;
+    }
+
+    public void likeTweet(String userId, String idTweet){
+        twitterRepository.likeTweet(userId, idTweet);
     }
 
     public static final ViewModelInitializer<TweetViewModel> initializer = new ViewModelInitializer<>(
