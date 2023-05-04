@@ -5,6 +5,7 @@ import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.core.RetrofitHelper;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
+import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
 
 import java.util.List;
@@ -33,5 +34,9 @@ public class TwitterService {
 
     public Call<Tweet> likeTweet(String userId, String idTweet){
         return retrofit.create(TwitterApiClient.class).likeTweet(userId, idTweet);
+    }
+
+    public Call<DeletedTweet> deleteTweet(String tweetId){
+        return retrofit.create(TwitterApiClient.class).deleteTweet(tweetId);
     }
 }

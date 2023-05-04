@@ -46,12 +46,15 @@ public class DashboardActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.menu_home:
                         replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_ALL));
+                        fab.show();
                         break;
                     case R.id.menu_favorites:
                         replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_FAVS));
+                        fab.hide();
                         break;
                     case R.id.menu_profile:
                         replaceFragment(new ProfileFragment());
+                        fab.hide();
                         break;
                 }
                 return true;

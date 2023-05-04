@@ -14,7 +14,6 @@ import com.app.minitwitter.retrofit.response.Tweet;
 import java.util.List;
 
 public class TweetViewModel extends AndroidViewModel {
-
     private TwitterRepository twitterRepository;
     private LiveData<List<Tweet>> tweets;
     private LiveData<List<Tweet>> favTweets;
@@ -50,6 +49,10 @@ public class TweetViewModel extends AndroidViewModel {
 
     public void likeTweet(String userId, String idTweet){
         twitterRepository.likeTweet(userId, idTweet);
+    }
+
+    public void deleteTweet(String tweetId){
+        twitterRepository.deleteTweet(tweetId);
     }
 
     public static final ViewModelInitializer<TweetViewModel> initializer = new ViewModelInitializer<>(

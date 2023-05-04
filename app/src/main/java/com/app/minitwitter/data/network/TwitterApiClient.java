@@ -4,12 +4,14 @@ import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
+import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
@@ -32,4 +34,7 @@ public interface TwitterApiClient {
 
     @POST("tweets/like/{userId}&{tweetId}")
     Call<Tweet> likeTweet(@Path("userId") String userId, @Path("tweetId") String idTweet);
+
+    @DELETE("tweets/{tweetId}")
+    Call<DeletedTweet> deleteTweet(@Path("tweetId") String tweetId);
 }

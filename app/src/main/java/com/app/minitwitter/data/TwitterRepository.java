@@ -11,6 +11,7 @@ import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.network.TwitterService;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
+import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
 
 import java.util.ArrayList;
@@ -25,7 +26,6 @@ import retrofit2.Response;
 public class TwitterRepository {
     TwitterService twitterService;
     MutableLiveData<List<Tweet>> allTweets;
-
     MutableLiveData<List<Tweet>> favTweets;
 
     public TwitterRepository(){
@@ -144,6 +144,34 @@ public class TwitterRepository {
 
             @Override
             public void onFailure(Call<Tweet> call, Throwable t) {
+
+            }
+        });
+    }
+
+    public void deleteTweet(String tweetId){
+        Call<DeletedTweet> call = twitterService.deleteTweet(tweetId);
+
+        call.enqueue(new Callback<DeletedTweet>() {
+            @Override
+            public void onResponse(Call<DeletedTweet> call, Response<DeletedTweet> response) {
+                if(response.isSuccessful()){
+                    List<Tweet> clonedList = new ArrayList<>();
+
+                    for(int i = 0; i < allTweets.getValue().size(); i++){
+                        if(!Objects.equals(allTweets.getValue().get(i).getId(), response.body().getId())){
+                            clonedList.add(allTweets.getValue().get(i));
+                        }
+                    }
+
+                    allTweets.setValue(clonedList);
+
+                    getFavTweets();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeletedTweet> call, Throwable t) {
 
             }
         });
