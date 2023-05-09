@@ -50,6 +50,7 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
     public void onBindViewHolder(final ViewHolder holder, int currentPos) {
         int position = holder.getBindingAdapterPosition();
         String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+        String photoUrl = SharedPreferencesManager.getStringValue(Constants.PREF_PHOTOURL);
         Tweet tweet = tweetList.get(position);
 
         if(tweetList != null){
@@ -71,6 +72,11 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
             });
 
             if(userId.equalsIgnoreCase(tweet.getUser().getId())){
+                Glide.with(context)
+                        .load(photoUrl)
+                        .placeholder(R.drawable.unknown_person)
+                        .into(holder.ivAvatar);
+
                 holder.ivDownArrow.setVisibility(View.VISIBLE);
                 holder.ivDownArrow.setOnClickListener(new View.OnClickListener() {
                     @Override

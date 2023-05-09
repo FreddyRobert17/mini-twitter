@@ -17,7 +17,6 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -44,8 +43,8 @@ public interface TwitterApiClient {
     Call<DeletedTweet> deleteTweet(@Path("tweetId") String tweetId);
 
     @Multipart
-    @POST("user/uploadPhoto")
-    Call<UpdatedUser> uploadUserImage(
+    @POST("user/updateUserData")
+    Call<UpdatedUser> uploadUserData(
                                         @Part("userId") RequestBody userId,
                                         @Part MultipartBody.Part image,
                                        @Part("username") RequestBody username,

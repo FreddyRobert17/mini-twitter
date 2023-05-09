@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,16 +100,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(MainActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
                         goToDashboard();
                     } else {
-                        Toast.makeText(MainActivity.this, "not successful response "  + response.code(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    Toast.makeText(MainActivity.this, "failure response" + t, Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });
         }

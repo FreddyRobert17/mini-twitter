@@ -45,6 +45,6 @@ public class TwitterService {
 
     public Call<UpdatedUser> updateUserData(RequestBody userId, MultipartBody.Part image,
                                             RequestBody username, RequestBody email, RequestBody password){
-         return retrofit.create(TwitterApiClient.class).uploadUserImage(userId, image, username, email, password);
+         return retrofit.create(TwitterApiClient.class).uploadUserData(userId, image, username, email, password);
     }
 }

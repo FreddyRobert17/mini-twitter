@@ -93,19 +93,18 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
                         SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
                         SharedPreferencesManager.setStringValue(Constants.PREF_USER_PASSWORD, response.body().getPassword());
-                        Toast.makeText(SignUpActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
-                        Log.i("TAG", response.body().getAccessToken());
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(SignUpActivity.this, "fue mal error codigo "  + response.code(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(SignUpActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    Log.i("TAG", "Error:" + t);
+                    Toast.makeText(SignUpActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });
         }
