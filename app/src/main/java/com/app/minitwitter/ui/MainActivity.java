@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,23 +16,21 @@ import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
-import com.app.minitwitter.data.network.TwitterService;
+import com.app.minitwitter.ui.customElements.ProgressButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnLogin;
     TextView tvGoSignUp;
-
     EditText editTextEmail, editTextPassword;
+    View progressButtonView;
+    ProgressButton progressButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Intent intent = new Intent(this, DashboardActivity.class);
-        //startActivity(intent);
 
         checkLoggedUser();
 
@@ -56,15 +53,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void findViews(){
-        btnLogin = findViewById(R.id.button_login);
         tvGoSignUp = findViewById(R.id.text_view_go_signup);
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
+        progressButtonView = findViewById(R.id.custom_progress_button);
+        progressButton = new ProgressButton(MainActivity.this, progressButtonView, "LOGIN");
     }
 
     private void addEvents(){
-        btnLogin.setOnClickListener(this);
         tvGoSignUp.setOnClickListener(this);
+        progressButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goToLogin();
+            }
+        });
     }
 
     @Override
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
 
         switch (id){
-            case R.id.button_login:
+            case R.id.custom_progress_button:
                 goToLogin();
                 break;
             case R.id.text_view_go_signup:
@@ -90,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (password.isEmpty()) {
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
+            progressButton.activateButton();
             RequestLogin requestLogin = new RequestLogin(email, password);
             TwitterRepository twitterRepository = new TwitterRepository();
             String token = SharedPreferencesManager.getStringValue(Constants.PREF_TOKEN);
@@ -103,12 +107,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Toast.makeText(MainActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
                         goToDashboard();
                     } else {
+                        progressButton.onFinishedButtonAction();
                         Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
+                    progressButton.onFinishedButtonAction();
                     Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });

@@ -57,7 +57,8 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
         String photoUrl = SharedPreferencesManager.getStringValue(Constants.PREF_PHOTOURL);
 
         Glide.with(getActivity())
-                .load("https://cdn.pixabay.com/photo/2014/10/06/17/30/child-476507_1280.jpg")
+                .load(photoUrl)
+                .placeholder(R.drawable.unknown_person)
                 .into(profileImage);
 
         return view;

@@ -41,4 +41,8 @@
 
     <string name="generic_error_message">"Something went wrong. Please try again"</string>
     <string name="generic_success_message">Success</string>
+
+    <!--ProgressButton-->
+    <string name="please_wait_message">Please wait…</string>
+    <string name="done_message">Done</string>
 </resources>

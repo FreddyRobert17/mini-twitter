@@ -65,7 +65,7 @@ public class TweetListFragment extends Fragment {
 
             recyclerView = view.findViewById(R.id.list);
             swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
-            swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.color_blue));
+            swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
 
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -219,6 +221,7 @@ public class ProfileFragment extends Fragment {
                     Log.i("TAG", String.valueOf(response.body().getPassword()));
                     if(response.body().getPhotoUrl() != null){
                         SharedPreferencesManager.setStringValue(Constants.PREF_PHOTOURL, response.body().getPhotoUrl());
+                        updateActionBarImage();
                     }
                     SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
                     SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
@@ -231,6 +234,13 @@ public class ProfileFragment extends Fragment {
                 Log.i("TAG", String.valueOf(t));
             }
         });
+    }
+
+    private void updateActionBarImage() {
+        Window window = getActivity().getWindow();
+        View v = window.getDecorView();
+        CircleImageView circleImageView = v.findViewById(R.id.profile_image);
+        circleImageView.setImageURI(userImageURI);
     }
 
     @Override

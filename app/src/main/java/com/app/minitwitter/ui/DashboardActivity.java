@@ -9,19 +9,18 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.ui.fragments.AddTweetDialogFragment;
-import com.app.minitwitter.ui.fragments.FavoriteTweetsFragment;
 import com.app.minitwitter.ui.fragments.ProfileFragment;
 import com.app.minitwitter.ui.fragments.TweetListFragment;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -31,6 +30,8 @@ public class DashboardActivity extends AppCompatActivity {
     CircleImageView imageProfile;
     BottomNavigationView bottomNavigationView;
 
+    TextView tvUsername;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         fab = findViewById(R.id.fab);
         imageProfile = findViewById(R.id.profile_image);
+        tvUsername = findViewById(R.id.username);
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
@@ -70,9 +72,13 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         String photoUrl = SharedPreferencesManager.getStringValue(Constants.PREF_PHOTOURL);
+        String userName = SharedPreferencesManager.getStringValue(Constants.PREF_USER_NAME);
+
+        tvUsername.setText(userName);
 
         Glide.with(this)
-                .load("https://cdn.pixabay.com/photo/2014/10/06/17/30/child-476507_1280.jpg")
+                .load(photoUrl)
+                .placeholder(R.drawable.unknown_person)
                 .into(imageProfile);
     }
 
