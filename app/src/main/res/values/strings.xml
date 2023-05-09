@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MiniTwitter</string>
-    <string name="hint_name">Name</string>
+    <string name="hint_username">Username</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="text_button">Login</string>
@@ -31,5 +31,11 @@
     <string name="menu_home_title">Home</string>
     <string name="menu_favorites_title">Favorites</string>
     <string name="menu_profile_title">Profile</string>
+    <string name="menu_delete_tweet">Delete tweet</string>
 
+    <!--Profile-->
+    <string name="profile_button_text">Save</string>
+    <string name="profile_username_hint">Username</string>
+    <string name="profile_email_hint">Email</string>
+    <string name="profile_password_hint">Password</string>
 </resources>

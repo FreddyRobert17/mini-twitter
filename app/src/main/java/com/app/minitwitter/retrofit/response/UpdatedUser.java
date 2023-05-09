@@ -1,17 +1,15 @@
+package com.app.minitwitter.retrofit.response;
 
-package com.app.minitwitter.core;
+import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResponseAuth {
-    @SerializedName("access_token")
+public class UpdatedUser {
+    @SerializedName("photoUrl")
+    @Nullable
     @Expose
-    private String accessToken;
-
-    @SerializedName("id")
-    @Expose
-    private String id;
+    private String photoUrl;
 
     @SerializedName("username")
     @Expose
@@ -25,27 +23,16 @@ public class ResponseAuth {
     @Expose
     private String password;
 
-    public ResponseAuth() {
+    public UpdatedUser(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
-    public String getId() {
-        return id;
+    public String getPhotoUrl() {
+        return photoUrl;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public ResponseAuth(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setPhotoUrl(String photoUrl) {
+        this.photoUrl = photoUrl;
     }
 
     public String getUsername() {

@@ -5,10 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -18,11 +15,9 @@ import android.widget.Toast;
 import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
-import com.app.minitwitter.core.RequestLogin;
 import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
-import com.app.minitwitter.data.network.TwitterService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,7 +45,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         scrollView = findViewById(R.id.scroll_view);
         btnSignUp = findViewById(R.id.button_signup);
         tvGoLogin = findViewById(R.id.text_view_go_login);
-        editTextName = findViewById(R.id.edit_text_name);
+        editTextName = findViewById(R.id.edit_text_username);
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
     }
@@ -95,6 +90,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     if(response.isSuccessful()){
                         SharedPreferencesManager.setStringValue(Constants.PREF_TOKEN, response.body().getAccessToken());
                         SharedPreferencesManager.setStringValue(Constants.PREF_USER_ID, response.body().getId());
+                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
+                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
+                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_PASSWORD, response.body().getPassword());
                         Toast.makeText(SignUpActivity.this, "tosdo bien", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
                         Log.i("TAG", response.body().getAccessToken());

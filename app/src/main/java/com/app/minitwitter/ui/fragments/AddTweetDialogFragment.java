@@ -38,7 +38,6 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setStyle(DialogFragment.STYLE_NORMAL, R.style.Theme_MiniTwitter_NoActionBar);
     }
 

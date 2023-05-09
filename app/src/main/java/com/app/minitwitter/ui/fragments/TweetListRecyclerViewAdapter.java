@@ -49,43 +49,53 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
     @Override
     public void onBindViewHolder(final ViewHolder holder, int currentPos) {
         int position = holder.getBindingAdapterPosition();
+        String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+        Tweet tweet = tweetList.get(position);
 
         if(tweetList != null){
-            holder.tvAuthorName.setText(String.valueOf(tweetList.get(position).getUser().getUsername()));
-            holder.tvMessage.setText(tweetList.get(position).getMessage());
-            holder.tvLikeCount.setText(String.valueOf(tweetList.get(position).getLikes().size()));
+            holder.tvAuthorName.setText(tweet.getUser().getUsername());
+            holder.tvMessage.setText(tweet.getMessage());
+            holder.tvLikeCount.setText(String.valueOf(tweet.getLikes().size()));
 
             Glide.with(context)
-                    .load(tweetList.get(position).getUser().getPhotoUrl())
+                    .load(tweet.getUser().getPhotoUrl())
                     .placeholder(R.drawable.unknown_person)
                     .into(holder.ivAvatar);
 
             holder.ivLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
-                    String tweetId = tweetList.get(position).getId();
+                    String tweetId = tweet.getId();
                     tweetViewModel.likeTweet(userId, tweetId);
                 }
             });
 
-            List<String> likes =  tweetList.get(position).getLikes();
-
-            if(!likes.isEmpty()){
-                for(String likeId : likes){
-                    String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
-                    if(likeId.equalsIgnoreCase(userId)){
-                        holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_filled_heart));
-                        holder.tvLikeCount.setTextColor(Color.RED);
-                        holder.tvLikeCount.setTypeface(null, Typeface.BOLD);
+            if(userId.equalsIgnoreCase(tweet.getUser().getId())){
+                holder.ivDownArrow.setVisibility(View.VISIBLE);
+                holder.ivDownArrow.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tweetViewModel.openBottomTweetMenu(context, tweetList.get(position).getId());
                     }
-                }
-            } else{
-                holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_empty_heart));
-                holder.tvLikeCount.setTypeface(null, Typeface.NORMAL);
-                holder.tvLikeCount.setTextColor(Color.GRAY);
+                });
+            } else {
+                holder.ivDownArrow.setVisibility(View.GONE);
             }
 
+            List<String> likes =  tweet.getLikes();
+
+            holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_empty_heart));
+            holder.tvLikeCount.setTypeface(null, Typeface.NORMAL);
+            holder.tvLikeCount.setTextColor(Color.GRAY);
+
+            for(String likeId : likes){
+                String prefUserId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
+                if(likeId.equalsIgnoreCase(prefUserId)){
+                    holder.ivLike.setImageDrawable(context.getDrawable(R.drawable.icon_filled_heart));
+                    holder.tvLikeCount.setTextColor(Color.RED);
+                    holder.tvLikeCount.setTypeface(null, Typeface.BOLD);
+                }
+            }
         }
     }
 
@@ -106,6 +116,7 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
         public View mView;
         public ImageView ivAvatar;
         public TextView tvAuthorName;
+        public ImageView ivDownArrow;
         public TextView tvMessage;
         public ImageView ivLike;
         public TextView tvLikeCount;
@@ -114,6 +125,7 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
             super(binding.getRoot());
             mView = binding.getRoot();
             ivAvatar = binding.imageProfile;
+            ivDownArrow = binding.downArrow;
             tvAuthorName = binding.authorName;
             tvMessage = binding.message;
             ivLike = binding.like;

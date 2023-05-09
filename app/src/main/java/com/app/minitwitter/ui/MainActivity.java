@@ -31,10 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, DashboardActivity.class);
+        //startActivity(intent);
 
-        //checkLoggedUser();
+        checkLoggedUser();
 
         setContentView(R.layout.activity_main);
 

@@ -1,8 +1,10 @@
 package com.app.minitwitter.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
@@ -10,6 +12,7 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 import com.app.minitwitter.common.MyApplication;
 import com.app.minitwitter.data.TwitterRepository;
 import com.app.minitwitter.retrofit.response.Tweet;
+import com.app.minitwitter.ui.fragments.BottomModalTweetFragment;
 
 import java.util.List;
 
@@ -53,6 +56,12 @@ public class TweetViewModel extends AndroidViewModel {
 
     public void deleteTweet(String tweetId){
         twitterRepository.deleteTweet(tweetId);
+    }
+
+    public void openBottomTweetMenu(Context context, String tweetId){
+        BottomModalTweetFragment bottomModal = BottomModalTweetFragment.newInstance(tweetId);
+        bottomModal.show(((AppCompatActivity) context)
+                .getSupportFragmentManager(), "BottomModalTweetFragment");
     }
 
     public static final ViewModelInitializer<TweetViewModel> initializer = new ViewModelInitializer<>(

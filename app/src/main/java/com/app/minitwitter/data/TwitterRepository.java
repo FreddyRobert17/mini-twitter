@@ -13,12 +13,15 @@ import com.app.minitwitter.data.network.TwitterService;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
 import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
+import com.app.minitwitter.retrofit.response.UpdatedUser;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -175,5 +178,10 @@ public class TwitterRepository {
 
             }
         });
+    }
+
+    public Call<UpdatedUser> updateUserData(RequestBody userId, MultipartBody.Part image,
+                                            RequestBody username, RequestBody email, RequestBody password){
+        return twitterService.updateUserData(userId, image, username, email, password);
     }
 }

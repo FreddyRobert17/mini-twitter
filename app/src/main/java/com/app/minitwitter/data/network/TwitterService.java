@@ -7,9 +7,12 @@ import com.app.minitwitter.core.RetrofitHelper;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
 import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
+import com.app.minitwitter.retrofit.response.UpdatedUser;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
@@ -38,5 +41,10 @@ public class TwitterService {
 
     public Call<DeletedTweet> deleteTweet(String tweetId){
         return retrofit.create(TwitterApiClient.class).deleteTweet(tweetId);
+    }
+
+    public Call<UpdatedUser> updateUserData(RequestBody userId, MultipartBody.Part image,
+                                            RequestBody username, RequestBody email, RequestBody password){
+         return retrofit.create(TwitterApiClient.class).uploadUserImage(userId, image, username, email, password);
     }
 }

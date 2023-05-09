@@ -6,16 +6,21 @@ import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
 import com.app.minitwitter.retrofit.response.DeletedTweet;
 import com.app.minitwitter.retrofit.response.Tweet;
+import com.app.minitwitter.retrofit.response.UpdatedUser;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface TwitterApiClient {
@@ -37,4 +42,13 @@ public interface TwitterApiClient {
 
     @DELETE("tweets/{tweetId}")
     Call<DeletedTweet> deleteTweet(@Path("tweetId") String tweetId);
+
+    @Multipart
+    @POST("user/uploadPhoto")
+    Call<UpdatedUser> uploadUserImage(
+                                        @Part("userId") RequestBody userId,
+                                        @Part MultipartBody.Part image,
+                                       @Part("username") RequestBody username,
+                                       @Part("email") RequestBody email,
+                                       @Part("password") RequestBody password);
 }
