@@ -29,7 +29,6 @@ import java.util.List;
 public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetListRecyclerViewAdapter.ViewHolder>  {
     private List<Tweet> tweetList;
     private Context context;
-
     private TweetViewModel tweetViewModel;
 
     public TweetListRecyclerViewAdapter(Context context, List<Tweet> tweetList) {
@@ -137,9 +136,5 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
             ivLike = binding.like;
             tvLikeCount = binding.likeNumber;
         }
-    }
-
-    interface EmptyListener {
-        public void isListEmpty(Boolean isEmpty);
     }
 }
