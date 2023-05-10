@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -15,8 +13,8 @@ import android.widget.Toast;
 import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
-import com.app.minitwitter.core.RequestSignUp;
-import com.app.minitwitter.core.ResponseAuth;
+import com.app.minitwitter.retrofit.request.RequestSignUp;
+import com.app.minitwitter.retrofit.response.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
 import com.app.minitwitter.ui.customElements.ProgressButton;
 
@@ -83,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         } else if (password.isEmpty()) {
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
-            progressButton.activateButton();
+            progressButton.showLoading();
             RequestSignUp requestSignUp = new RequestSignUp(username, email, password);
             TwitterRepository twitterRepository = new TwitterRepository();
             Call<ResponseAuth> call =  twitterRepository.doSignUp(requestSignUp);
@@ -92,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
-                        progressButton.onFinishedButtonAction();
+                        progressButton.stopLoading();
 
                         saveUserData(response);
 
@@ -109,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    progressButton.onFinishedButtonAction();
+                    progressButton.stopLoading();
                     Toast.makeText(SignUpActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -125,7 +123,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void goToLogin() {
-        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 }

@@ -14,6 +14,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
@@ -29,8 +31,9 @@ public class TweetListFragment extends Fragment {
     List<Tweet> tweetList = new ArrayList<>();
     TweetListRecyclerViewAdapter tweetListRecyclerViewAdapter;
     TweetViewModel tweetViewModel;
-
     SwipeRefreshLayout swipeRefreshLayout;
+    ImageView ivNoDataImage;
+    TextView tvNoDataMessage;
 
     public TweetListFragment() {
     }
@@ -64,6 +67,8 @@ public class TweetListFragment extends Fragment {
             Context context = view.getContext();
 
             recyclerView = view.findViewById(R.id.list);
+            ivNoDataImage = view.findViewById(R.id.iv_not_found_image);
+            tvNoDataMessage = view.findViewById(R.id.tv_not_found_text);
             swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
             swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
 
@@ -83,6 +88,19 @@ public class TweetListFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             tweetListRecyclerViewAdapter = new TweetListRecyclerViewAdapter(getActivity(), tweetList);
             recyclerView.setAdapter(tweetListRecyclerViewAdapter);
+            tweetListRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                @Override
+                public void onChanged() {
+                    super.onChanged();
+                    if(tweetList.isEmpty()){
+                        ivNoDataImage.setVisibility(View.VISIBLE);
+                        tvNoDataMessage.setVisibility(View.VISIBLE);
+                    } else {
+                        ivNoDataImage.setVisibility(View.GONE);
+                        tvNoDataMessage.setVisibility(View.GONE);
+                    }
+                }
+            });
 
             if(tweetListType == Constants.TWEET_LIST_ALL){
                 loadAllTweetData();

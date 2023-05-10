@@ -208,7 +208,7 @@ public class ProfileFragment extends Fragment {
         RequestBody requestEmail = RequestBody.create(MediaType.parse("text/plain"), email);
         RequestBody requestPassword = RequestBody.create(MediaType.parse("text/plain"), password);
 
-        progressButton.activateButton();
+        progressButton.showLoading();
         TwitterRepository twitterRepository = new TwitterRepository();
         Call<UpdatedUser> response =  twitterRepository.updateUserData(
                 requestUserId, imagePart, requestUsername, requestEmail, requestPassword);
@@ -221,7 +221,7 @@ public class ProfileFragment extends Fragment {
                     Log.i("TAG", String.valueOf(response.body().getUsername()));
                     Log.i("TAG", String.valueOf(response.body().getEmail()));
                     Log.i("TAG", String.valueOf(response.body().getPassword()));
-                    progressButton.onFinishedButtonAction();
+                    progressButton.stopLoading();
                     if(response.body().getPhotoUrl() != null){
                         SharedPreferencesManager.setStringValue(Constants.PREF_PHOTOURL, response.body().getPhotoUrl());
                         updateActionBarImage();
@@ -234,7 +234,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onFailure(Call<UpdatedUser> call, Throwable t) {
-                progressButton.onFinishedButtonAction();
+                progressButton.stopLoading();
                 Log.i("TAG", String.valueOf(t));
             }
         });

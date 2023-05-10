@@ -29,14 +29,14 @@ public class ProgressButton {
         this.buttonText = buttonText;
     }
 
-    public void activateButton(){
+    public void showLoading(){
         progressBar.setVisibility(View.VISIBLE);
         cardView.setEnabled(false);
         cardView.setAlpha(0.9f);
         tvButtonText.setText(R.string.please_wait_message);
     }
 
-    public void onFinishedButtonAction(){
+    public void stopLoading(){
         progressBar.setVisibility(View.GONE);
         cardView.setEnabled(true);
         cardView.setAlpha(1.0f);

@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,8 +12,8 @@ import android.widget.Toast;
 import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
-import com.app.minitwitter.core.RequestLogin;
-import com.app.minitwitter.core.ResponseAuth;
+import com.app.minitwitter.retrofit.request.RequestLogin;
+import com.app.minitwitter.retrofit.response.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
 import com.app.minitwitter.ui.customElements.ProgressButton;
 
@@ -22,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     TextView tvGoSignUp;
     EditText editTextEmail, editTextPassword;
     View progressButtonView;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         checkLoggedUser();
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         getSupportActionBar().hide();
 
@@ -57,17 +56,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
         progressButtonView = findViewById(R.id.custom_progress_button);
-        progressButton = new ProgressButton(MainActivity.this, progressButtonView, "Login");
+        progressButton = new ProgressButton(LoginActivity.this, progressButtonView, "Login");
     }
 
     private void addEvents(){
         tvGoSignUp.setOnClickListener(this);
-        progressButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToLogin();
-            }
-        });
+        progressButtonView.setOnClickListener(view -> goToLogin());
     }
 
     @Override
@@ -93,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (password.isEmpty()) {
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
-            progressButton.activateButton();
+            progressButton.showLoading();
             RequestLogin requestLogin = new RequestLogin(email, password);
             TwitterRepository twitterRepository = new TwitterRepository();
             String token = SharedPreferencesManager.getStringValue(Constants.PREF_TOKEN);
@@ -104,25 +98,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(MainActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
                         goToDashboard();
                     } else {
-                        progressButton.onFinishedButtonAction();
-                        Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
+                        progressButton.stopLoading();
+                        Toast.makeText(LoginActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
-                    progressButton.onFinishedButtonAction();
-                    Toast.makeText(MainActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
+                    progressButton.stopLoading();
+                    Toast.makeText(LoginActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
     private void goToDashboard(){
-        Intent intent = new Intent(MainActivity.this, DashboardActivity.class);
+        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
         startActivity(intent);
         finish();
     }

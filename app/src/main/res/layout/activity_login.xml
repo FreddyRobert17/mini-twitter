@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/root"
     android:background="@color/colorAccent"
-    tools:context=".ui.MainActivity">
+    tools:context=".ui.LoginActivity">
 
     <ImageView
         android:id="@+id/image_view_logo"

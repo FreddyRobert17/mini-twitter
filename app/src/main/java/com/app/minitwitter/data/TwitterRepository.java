@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
-import com.app.minitwitter.core.RequestLogin;
-import com.app.minitwitter.core.RequestSignUp;
-import com.app.minitwitter.core.ResponseAuth;
+import com.app.minitwitter.retrofit.request.RequestLogin;
+import com.app.minitwitter.retrofit.request.RequestSignUp;
+import com.app.minitwitter.retrofit.response.ResponseAuth;
 import com.app.minitwitter.data.network.TwitterService;
 import com.app.minitwitter.retrofit.request.RequestCreateTweet;
 import com.app.minitwitter.retrofit.response.DeletedTweet;
@@ -16,7 +16,6 @@ import com.app.minitwitter.retrofit.response.Tweet;
 import com.app.minitwitter.retrofit.response.UpdatedUser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -82,9 +81,11 @@ public class TwitterRepository {
         List<Tweet> favList = new ArrayList<>();
         String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
 
-        for(Tweet tweet: currentList){
-            if(tweet.getLikes().contains(userId)){
-                favList.add(tweet);
+        if(currentList != null){
+            for(Tweet tweet: currentList){
+                if(tweet.getLikes().contains(userId)){
+                    favList.add(tweet);
+                }
             }
         }
 

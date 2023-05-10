@@ -13,7 +13,7 @@ public class RetrofitHelper {
     public static Retrofit getInstance(){
         if(retrofit == null){
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            // set your desired log level
+
             logging.setLevel(HttpLoggingInterceptor.Level.BODY);
             OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
             httpClient.addInterceptor(logging);
