@@ -15,7 +15,7 @@ import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.retrofit.request.RequestLogin;
 import com.app.minitwitter.retrofit.response.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
-import com.app.minitwitter.ui.customElements.ProgressButton;
+import com.app.minitwitter.ui.customViews.ProgressButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;

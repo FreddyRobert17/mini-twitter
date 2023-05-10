@@ -72,16 +72,13 @@ public class TweetListFragment extends Fragment {
             swipeRefreshLayout = view.findViewById(R.id.swipe_refresh_layout);
             swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorAccent));
 
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    swipeRefreshLayout.setRefreshing(true);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                swipeRefreshLayout.setRefreshing(true);
 
-                    if(tweetListType == Constants.TWEET_LIST_ALL){
-                        refreshData();
-                    } else if(tweetListType == Constants.TWEET_LIST_FAVS) {
-                        refreshFavData();
-                    }
+                if(tweetListType == Constants.TWEET_LIST_ALL){
+                    refreshData();
+                } else if(tweetListType == Constants.TWEET_LIST_FAVS) {
+                    refreshFavData();
                 }
             });
 

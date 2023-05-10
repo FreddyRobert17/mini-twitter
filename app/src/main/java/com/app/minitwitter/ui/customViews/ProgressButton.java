@@ -1,4 +1,4 @@
-package com.app.minitwitter.ui.customElements;
+package com.app.minitwitter.ui.customViews;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

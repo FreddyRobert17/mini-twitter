@@ -46,18 +46,15 @@ public class BottomModalTweetFragment extends BottomSheetDialogFragment {
 
         BottomNavigationView navigationView = view.findViewById(R.id.bottom_navigation_view);
 
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
+        navigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-                if(id == R.id.action_delete_tweet){
-                    tweetViewModel.deleteTweet(deleteTweetId);
-                    getDialog().dismiss();
-                    return true;
-                }
-                return false;
+            if(id == R.id.action_delete_tweet){
+                tweetViewModel.deleteTweet(deleteTweetId);
+                getDialog().dismiss();
+                return true;
             }
+            return false;
         });
 
         return view;

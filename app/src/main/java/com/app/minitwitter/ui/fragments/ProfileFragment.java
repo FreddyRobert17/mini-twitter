@@ -4,13 +4,13 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,7 +24,7 @@ import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.data.TwitterRepository;
 import com.app.minitwitter.retrofit.response.UpdatedUser;
-import com.app.minitwitter.ui.customElements.ProgressButton;
+import com.app.minitwitter.ui.customViews.ProgressButton;
 import com.app.minitwitter.viewmodel.TweetViewModel;
 import com.bumptech.glide.Glide;
 
@@ -73,7 +73,6 @@ public class ProfileFragment extends Fragment {
        mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
                 uri -> {
                     if(uri != null){
-                        Log.i("TAG", String.valueOf(uri));
                         userImageURI = uri;
                         Glide.with(getActivity())
                                 .load(uri)
@@ -113,34 +112,31 @@ public class ProfileFragment extends Fragment {
             pickImage();
         });
 
-        progressButtonView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (etUsername.getText().toString().isEmpty()) {
-                    etUsername.setError(getResources().getString(R.string.editText_username_error_message));
-                } else if (etEmail.getText().toString().isEmpty()) {
-                    etEmail.setError(getResources().getString(R.string.editText_email_error_message));
-                } else if (etPassword.getText().toString().isEmpty()) {
-                    etPassword.setError(getResources().getString(R.string.editText_password_error_message));
-                } else {
-                    String newUsername = etUsername.getText().toString();
-                    String newEmail = etEmail.getText().toString();
-                    String newPassword = etPassword.getText().toString();
+        progressButtonView.setOnClickListener(view -> {
+            if (etUsername.getText().toString().isEmpty()) {
+                etUsername.setError(getResources().getString(R.string.editText_username_error_message));
+            } else if (etEmail.getText().toString().isEmpty()) {
+                etEmail.setError(getResources().getString(R.string.editText_email_error_message));
+            } else if (etPassword.getText().toString().isEmpty()) {
+                etPassword.setError(getResources().getString(R.string.editText_password_error_message));
+            } else {
+                String newUsername = etUsername.getText().toString();
+                String newEmail = etEmail.getText().toString();
+                String newPassword = etPassword.getText().toString();
 
-                    if (newUsername.equals(defaultUsername)) {
-                        newUsername = defaultUsername;
-                    }
-
-                    if (newEmail.equals(defaultEmail)) {
-                        newEmail = defaultEmail;
-                    }
-
-                    if (newPassword.equals(defaultPassword)) {
-                        newPassword = defaultPassword;
-                    }
-
-                    saveUserData(newUsername, newEmail, newPassword);
+                if (newUsername.equals(defaultUsername)) {
+                    newUsername = defaultUsername;
                 }
+
+                if (newEmail.equals(defaultEmail)) {
+                    newEmail = defaultEmail;
+                }
+
+                if (newPassword.equals(defaultPassword)) {
+                    newPassword = defaultPassword;
+                }
+
+                saveUserData(newUsername, newEmail, newPassword);
             }
         });
     }
@@ -217,10 +213,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onResponse(Call<UpdatedUser> call, Response<UpdatedUser> response) {
                 if(response.isSuccessful()){
-                    Log.i("TAG", String.valueOf(response.body().getPhotoUrl()));
-                    Log.i("TAG", String.valueOf(response.body().getUsername()));
-                    Log.i("TAG", String.valueOf(response.body().getEmail()));
-                    Log.i("TAG", String.valueOf(response.body().getPassword()));
                     progressButton.stopLoading();
                     if(response.body().getPhotoUrl() != null){
                         SharedPreferencesManager.setStringValue(Constants.PREF_PHOTOURL, response.body().getPhotoUrl());
@@ -229,13 +221,15 @@ public class ProfileFragment extends Fragment {
                     SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
                     SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
                     SharedPreferencesManager.setStringValue(Constants.PREF_USER_PASSWORD, response.body().getPassword());
+                } else {
+                    Toast.makeText(getActivity(),  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UpdatedUser> call, Throwable t) {
                 progressButton.stopLoading();
-                Log.i("TAG", String.valueOf(t));
+                Toast.makeText(getActivity(),  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
             }
         });
     }

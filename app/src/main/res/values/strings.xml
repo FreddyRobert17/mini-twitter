@@ -16,18 +16,12 @@
     <string name="editText_password_error_message">Password field is required</string>
     <string name="title_activity_test">testActivity</string>
 
-    <!-- Strings used for fragments for navigation -->
-    <string name="tweet_list_fragment_label">Tweet List Fragment</string>
-    <string name="favorite_tweets_fragment">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <!--Add tweet fragment-->
     <string name="hint_add_tweet_message">What\'s happening?</string>
     <string name="create_tweet_button_text">Send</string>
+    <string name="empty_text_message">"You need to write a tweet first"</string>
+    <string name="close_dialog_title">"Cancel tweel"</string>
+    <string name="close_dialog_message">"Do you want to cancel your current tweet?  Your message will be deleted it"</string>
 
     <!--Bottom navigation menu titles-->
     <string name="menu_home_title">Home</string>

@@ -28,7 +28,6 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
     ImageView ivClose;
     Button btnCreateTweet;
     EditText etMessage;
-
     CircleImageView profileImage;
 
     public AddTweetDialogFragment() {
@@ -70,7 +69,7 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
 
         if(id == R.id.create_tweet_button){
             if(message.isEmpty()){
-                Toast.makeText(getActivity(), "You need to write a tweet", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.empty_text_message), Toast.LENGTH_SHORT).show();
             } else {
                 String userId = SharedPreferencesManager.getStringValue(Constants.PREF_USER_ID);
 
@@ -87,19 +86,9 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
 
     private void showDialogConfirm() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Do you want to cancel your current tweet?  Your message will be deleted it")
-                .setTitle("Cancel tweel")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        getDialog().dismiss();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                }).show();
+        builder.setTitle(getString(R.string.close_dialog_title))
+                .setMessage(getString(R.string.close_dialog_message))
+                .setPositiveButton(android.R.string.yes, (dialogInterface, i) -> getDialog().dismiss())
+                .setNegativeButton(android.R.string.no, (dialogInterface, i) -> {}).show();
     }
 }
