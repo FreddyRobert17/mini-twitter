@@ -18,15 +18,17 @@ import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.core.RequestSignUp;
 import com.app.minitwitter.core.ResponseAuth;
 import com.app.minitwitter.data.TwitterRepository;
+import com.app.minitwitter.ui.customElements.ProgressButton;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
-    Button btnSignUp;
     TextView tvGoLogin;
     ScrollView scrollView;
+    View progressButtonView;
+    ProgressButton progressButton;
 
     EditText editTextName, editTextEmail, editTextPassword;
     @Override
@@ -43,15 +45,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void findViews(){
         scrollView = findViewById(R.id.scroll_view);
-        btnSignUp = findViewById(R.id.button_signup);
         tvGoLogin = findViewById(R.id.text_view_go_login);
         editTextName = findViewById(R.id.edit_text_username);
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
+        progressButtonView = findViewById(R.id.custom_progress_button);
+        progressButton = new ProgressButton(SignUpActivity.this, progressButtonView, "Sign up");
     }
 
     private void addEvents(){
-        btnSignUp.setOnClickListener(this);
+        progressButtonView.setOnClickListener(this);
         tvGoLogin.setOnClickListener(this);
     }
 
@@ -59,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         int id = view.getId();
 
         switch (id){
-            case R.id.button_signup:
+            case R.id.custom_progress_button:
                 goToSignUp();
                 break;
             case R.id.text_view_go_login:
@@ -80,6 +83,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         } else if (password.isEmpty()) {
             editTextPassword.setError(getResources().getString(R.string.editText_password_error_message));
         } else {
+            progressButton.activateButton();
             RequestSignUp requestSignUp = new RequestSignUp(username, email, password);
             TwitterRepository twitterRepository = new TwitterRepository();
             Call<ResponseAuth> call =  twitterRepository.doSignUp(requestSignUp);
@@ -88,14 +92,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 @Override
                 public void onResponse(Call<ResponseAuth> call, Response<ResponseAuth> response) {
                     if(response.isSuccessful()){
-                        SharedPreferencesManager.setStringValue(Constants.PREF_TOKEN, response.body().getAccessToken());
-                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_ID, response.body().getId());
-                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
-                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
-                        SharedPreferencesManager.setStringValue(Constants.PREF_USER_PASSWORD, response.body().getPassword());
+                        progressButton.onFinishedButtonAction();
+
+                        saveUserData(response);
+
                         Toast.makeText(SignUpActivity.this, getString(R.string.generic_success_message), Toast.LENGTH_SHORT).show();
+
                         Intent intent = new Intent(SignUpActivity.this, DashboardActivity.class);
                         startActivity(intent);
+
                         finish();
                     } else {
                         Toast.makeText(SignUpActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
@@ -104,10 +109,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 @Override
                 public void onFailure(Call<ResponseAuth> call, Throwable t) {
+                    progressButton.onFinishedButtonAction();
                     Toast.makeText(SignUpActivity.this,  getString(R.string.generic_error_message), Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void saveUserData(Response<ResponseAuth> response) {
+        SharedPreferencesManager.setStringValue(Constants.PREF_TOKEN, response.body().getAccessToken());
+        SharedPreferencesManager.setStringValue(Constants.PREF_USER_ID, response.body().getId());
+        SharedPreferencesManager.setStringValue(Constants.PREF_USER_NAME, response.body().getUsername());
+        SharedPreferencesManager.setStringValue(Constants.PREF_USER_EMAIL, response.body().getEmail());
+        SharedPreferencesManager.setStringValue(Constants.PREF_USER_PASSWORD, response.body().getPassword());
     }
 
     private void goToLogin() {

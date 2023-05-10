@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editTextEmail = findViewById(R.id.edit_text_email);
         editTextPassword = findViewById(R.id.edit_text_password);
         progressButtonView = findViewById(R.id.custom_progress_button);
-        progressButton = new ProgressButton(MainActivity.this, progressButtonView, "LOGIN");
+        progressButton = new ProgressButton(MainActivity.this, progressButtonView, "Login");
     }
 
     private void addEvents(){

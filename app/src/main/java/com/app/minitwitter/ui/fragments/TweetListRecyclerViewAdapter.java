@@ -54,7 +54,7 @@ public class TweetListRecyclerViewAdapter extends RecyclerView.Adapter<TweetList
         Tweet tweet = tweetList.get(position);
 
         if(tweetList != null){
-            holder.tvAuthorName.setText(tweet.getUser().getUsername());
+            holder.tvAuthorName.setText(context.getString(R.string.formatted_username, tweet.getUser().getUsername()));
             holder.tvMessage.setText(tweet.getMessage());
             holder.tvLikeCount.setText(String.valueOf(tweet.getLikes().size()));
 

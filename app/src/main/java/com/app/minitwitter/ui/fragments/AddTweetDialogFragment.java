@@ -44,7 +44,6 @@ public class AddTweetDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_addtweet_dialog, container, false);
         ivClose = view.findViewById(R.id.ivClose);
         profileImage = view.findViewById(R.id.iv_profile_image);

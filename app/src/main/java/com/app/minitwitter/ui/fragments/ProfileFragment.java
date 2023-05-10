@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -24,8 +23,8 @@ import com.app.minitwitter.R;
 import com.app.minitwitter.common.Constants;
 import com.app.minitwitter.common.SharedPreferencesManager;
 import com.app.minitwitter.data.TwitterRepository;
-import com.app.minitwitter.databinding.FragmentProfileBinding;
 import com.app.minitwitter.retrofit.response.UpdatedUser;
+import com.app.minitwitter.ui.customElements.ProgressButton;
 import com.app.minitwitter.viewmodel.TweetViewModel;
 import com.bumptech.glide.Glide;
 
@@ -43,15 +42,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
-    private FragmentProfileBinding binding;
     TweetViewModel tweetViewModel;
     ImageView ivUserImage;
     EditText etUsername, etEmail, etPassword;
-    Button buttonSaveUserData;
     ActivityResultLauncher<String> mGetContent;
     String IMAGE_MIME_TYPE = "image/*";
     Uri userImageURI;
     String defaultUsername, defaultEmail, defaultPassword, defaultImageUrl, userId;
+    View progressButtonView;
+    ProgressButton progressButton;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -88,23 +87,25 @@ public class ProfileFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View view =  inflater.inflate(R.layout.fragment_profile, container, false);
 
-        bindViews(binding);
+        bindViews(view);
 
         setDefaultUserData();
 
         setViewListeners();
 
-        return binding.getRoot();
+        return view;
     }
 
-    private void bindViews(FragmentProfileBinding binding) {
-        ivUserImage = binding.imageProfile;
-        etUsername = binding.etUsername;
-        etEmail = binding.etEmail;
-        etPassword = binding.etPassword;
-        buttonSaveUserData = binding.buttonSaveUserData;
+    private void bindViews(View view) {
+        ivUserImage = view.findViewById(R.id.image_profile);
+        etUsername = view.findViewById(R.id.et_username);
+        etEmail = view.findViewById(R.id.et_email);
+        etPassword = view.findViewById(R.id.et_password);
+        progressButtonView = view.findViewById(R.id.custom_progress_button);
+        progressButton = new ProgressButton(getActivity(), progressButtonView, "Save");
+        progressButton.setThemeColor(R.color.colorAccent, R.color.white);
     }
 
     private void setViewListeners() {
@@ -112,7 +113,7 @@ public class ProfileFragment extends Fragment {
             pickImage();
         });
 
-        buttonSaveUserData.setOnClickListener(new View.OnClickListener() {
+        progressButtonView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (etUsername.getText().toString().isEmpty()) {
@@ -207,6 +208,7 @@ public class ProfileFragment extends Fragment {
         RequestBody requestEmail = RequestBody.create(MediaType.parse("text/plain"), email);
         RequestBody requestPassword = RequestBody.create(MediaType.parse("text/plain"), password);
 
+        progressButton.activateButton();
         TwitterRepository twitterRepository = new TwitterRepository();
         Call<UpdatedUser> response =  twitterRepository.updateUserData(
                 requestUserId, imagePart, requestUsername, requestEmail, requestPassword);
@@ -219,6 +221,7 @@ public class ProfileFragment extends Fragment {
                     Log.i("TAG", String.valueOf(response.body().getUsername()));
                     Log.i("TAG", String.valueOf(response.body().getEmail()));
                     Log.i("TAG", String.valueOf(response.body().getPassword()));
+                    progressButton.onFinishedButtonAction();
                     if(response.body().getPhotoUrl() != null){
                         SharedPreferencesManager.setStringValue(Constants.PREF_PHOTOURL, response.body().getPhotoUrl());
                         updateActionBarImage();
@@ -231,6 +234,7 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onFailure(Call<UpdatedUser> call, Throwable t) {
+                progressButton.onFinishedButtonAction();
                 Log.i("TAG", String.valueOf(t));
             }
         });
@@ -241,11 +245,5 @@ public class ProfileFragment extends Fragment {
         View v = window.getDecorView();
         CircleImageView circleImageView = v.findViewById(R.id.profile_image);
         circleImageView.setImageURI(userImageURI);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }
