@@ -2,5 +2,11 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/tweetListFragment">
+    <fragment
+        android:id="@+id/tweetListFragment"
+        android:name="com.app.minitwitter.ui.fragments.TweetListFragment"
+        android:label="fragment_tweet_list_container"
+        tools:layout="@layout/fragment_tweet_list_container" />
 </navigation>

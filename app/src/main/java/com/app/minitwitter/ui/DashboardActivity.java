@@ -31,7 +31,6 @@ public class DashboardActivity extends AppCompatActivity {
     FloatingActionButton fab;
     CircleImageView imageProfile;
     BottomNavigationView bottomNavigationView;
-
     TextView tvUsername;
 
     @Override
@@ -44,33 +43,27 @@ public class DashboardActivity extends AppCompatActivity {
         tvUsername = findViewById(R.id.username);
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
 
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_home:
-                        replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_ALL));
-                        fab.show();
-                        break;
-                    case R.id.menu_favorites:
-                        replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_FAVS));
-                        fab.hide();
-                        break;
-                    case R.id.menu_profile:
-                        replaceFragment(new ProfileFragment());
-                        fab.hide();
-                        break;
-                }
-                return true;
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.menu_home:
+                    replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_ALL));
+                    fab.show();
+                    break;
+                case R.id.menu_favorites:
+                    replaceFragment(TweetListFragment.newInstance(Constants.TWEET_LIST_FAVS));
+                    fab.hide();
+                    break;
+                case R.id.menu_profile:
+                    replaceFragment(new ProfileFragment());
+                    fab.hide();
+                    break;
             }
+            return true;
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AddTweetDialogFragment dialog = new AddTweetDialogFragment();
-                dialog.show(getSupportFragmentManager(), "NewTweetDialogFragment");
-            }
+        fab.setOnClickListener(view -> {
+            AddTweetDialogFragment dialog = new AddTweetDialogFragment();
+            dialog.show(getSupportFragmentManager(), "NewTweetDialogFragment");
         });
 
         String photoUrl = SharedPreferencesManager.getStringValue(Constants.PREF_PHOTOURL);
